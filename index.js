@@ -1,34 +1,23 @@
-function minWindowSubstring(s, t) {
-  const map = new Map();
-  for (const char of t) {
-    map.set(char, (map.get(char) || 0) + 1);
-  }
-  let required = map.size;
-  let left = 0;
-  let right = 0;
-  let minLen = Infinity;
-  let substrStart = 0;
-  while (right < s.length) {
-    const char = s[right];
-    if (map.has(char)) {
-      map.set(char, map.get(char) - 1);
-      if (map.get(char) === 0) required--;
-    }
-    while (required === 0) {
-      if (right - left + 1 < minLen) {
-        minLen = right - left + 1;
-        substrStart = left;
+function zigzagLevelOrder(root) {
+  if (!root) return [];
+  const result = [];
+  let isReverse = false;
+  const queue = [root];
+  while (queue.length) {
+    const size = queue.length;
+    const level = [];
+    for (let i = 0; i < size; i++) {
+      const node = queue.shift();
+      if (isReverse) {
+        level.unshift(node.val);
+      } else {
+        level.push(node.val);
       }
-      const leftChar = s[left];
-      if (map.has(leftChar)) {
-        map.set(leftChar, map.get(leftChar) + 1);
-        if (map.get(leftChar) > 0) required++;
-      }
-      left++;
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
     }
-    right++;
+    result.push(level);
+    isReverse = !isReverse;
   }
-  return minLen === Infinity
-    ? ""
-    : s.substring(substrStart, substrStart + minLen);
+  return result;
 }
