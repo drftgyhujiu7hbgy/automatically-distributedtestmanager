@@ -1,22 +1,20 @@
-function mergeSort(arr) {
-  if (arr.length <= 1) return arr;
-  const mid = Math.floor(arr.length / 2);
-  const left = mergeSort(arr.slice(0, mid));
-  const right = mergeSort(arr.slice(mid));
-  return merge(left, right);
-}
-function merge(left, right) {
-  let result = [];
-  let leftIndex = 0;
-  let rightIndex = 0;
-  while (leftIndex < left.length && rightIndex < right.length) {
-    if (left[leftIndex] < right[rightIndex]) {
-      result.push(left[leftIndex]);
-      leftIndex++;
-    } else {
-      result.push(right[rightIndex]);
-      rightIndex++;
+function multiply(num1, num2) {
+  const m = num1.length;
+  const n = num2.length;
+  const pos = new Array(m + n).fill(0);
+  for (let i = m - 1; i >= 0; i--) {
+    for (let j = n - 1; j >= 0; j--) {
+      const mul = (num1[i] - "0") * (num2[j] - "0");
+      const p1 = i + j;
+      const p2 = i + j + 1;
+      const sum = mul + pos[p2];
+      pos[p1] += Math.floor(sum / 10);
+      pos[p2] = sum % 10;
     }
   }
-  return result.concat(left.slice(leftIndex)).concat(right.slice(rightIndex));
+  let result = "";
+  for (const p of pos) {
+    if (!(result.length === 0 && p === 0)) result += p;
+  }
+  return result.length === 0 ? "0" : result;
 }
