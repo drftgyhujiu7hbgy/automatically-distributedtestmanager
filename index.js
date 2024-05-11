@@ -1,20 +1,19 @@
-function multiply(num1, num2) {
-  const m = num1.length;
-  const n = num2.length;
-  const pos = new Array(m + n).fill(0);
-  for (let i = m - 1; i >= 0; i--) {
-    for (let j = n - 1; j >= 0; j--) {
-      const mul = (num1[i] - "0") * (num2[j] - "0");
-      const p1 = i + j;
-      const p2 = i + j + 1;
-      const sum = mul + pos[p2];
-      pos[p1] += Math.floor(sum / 10);
-      pos[p2] = sum % 10;
+function getHint(secret, guess) {
+  let bulls = 0;
+  let cows = 0;
+  const map = new Map();
+  for (let i = 0; i < secret.length; i++) {
+    if (secret[i] === guess[i]) {
+      bulls++;
+    } else {
+      map.set(secret[i], (map.get(secret[i]) || 0) + 1);
     }
   }
-  let result = "";
-  for (const p of pos) {
-    if (!(result.length === 0 && p === 0)) result += p;
+  for (let i = 0; i < guess.length; i++) {
+    if (secret[i] !== guess[i] && map.has(guess[i]) && map.get(guess[i]) > 0) {
+      cows++;
+      map.set(guess[i], map.get(guess[i]) - 1);
+    }
   }
-  return result.length === 0 ? "0" : result;
+  return `${bulls}A${cows}B`;
 }
